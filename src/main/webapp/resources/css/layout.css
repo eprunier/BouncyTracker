@@ -1,0 +1,215 @@
+
+/* Tags
+----------------------------------------------------------------*/
+html {
+	margin: 0px;
+	padding: 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #403634;
+	color: white;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+h1 {
+	font-size: 1.3em;
+}
+
+h1:FIRST-LETTER {
+	text-transform: uppercase;
+}
+
+h2 {
+	font-size: 1.1em;
+}
+
+h2:FIRST-LETTER {
+	text-transform: uppercase;
+}
+
+a {
+	text-decoration: none;
+	/*background: transparent url(../images/dot.gif) repeat-x left bottom;*/
+}
+
+a:link ,a:visited {
+	color: #724d46;
+}
+
+input[type="text"], input[type="password"], textarea {
+	border: 1px solid #BBB;
+	background-color: #F9F9F9;
+	width: 300px;
+}
+
+input[type="checkbox"] {
+	vertical-align: middle;
+	margin: 0px 5px;
+}
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+	font-size: 9px;
+	background-color: #333;
+	border: none;
+	color: white; 
+	font-weight: bold;
+	padding: 3px 10px;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+
+textarea {
+	width: 300px;
+	height: 100px;
+}
+
+select {
+}
+
+table {
+	border: 1px solid #DDD;
+	/*border-collapse: collapse*/;
+}
+
+th {
+	padding: 2px 5px;
+	text-align: left;
+	white-space: nowrap;
+}
+
+th:FIRST-LETTER {
+	text-transform: uppercase;
+}
+
+td {
+	padding: 2px 5px;
+}
+
+
+/* Structure
+----------------------------------------------------------------*/
+#page-container {
+	color: black;
+}
+
+#page-header {
+	padding: 10px 0 10px 15px;
+	color: white;
+} 
+
+#page-nav {
+} 
+
+#page-content {
+	background-color: white;
+	padding: 10px;
+	padding-bottom: 20px;
+}
+
+#page-footer {
+	padding: 10px 0;
+	text-align: center;
+	color: white;
+} 
+
+#page-footer a {
+	color: #BBB;
+	text-decoration: underline;
+}
+
+/* Content
+----------------------------------------------------------------*/
+#menu {
+	padding: 10px 5px;
+	background: transparent url(../images/menu-bg.png) repeat-x center top;
+	border-bottom: 1px solid #AAA;
+}
+
+#menu ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+#menu li {
+	display: inline;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 0px;
+}
+
+#menu li a {
+	font-weight: bold;
+	color: #444;
+}
+
+.odd {
+	background-color: #FFF;
+}
+
+.even {
+	background-color: #E0E0E0;
+}
+
+ul.actions {
+	padding: 0px;
+	margin: 0px;
+	white-space: nowrap;
+}
+
+ul.actions li {
+	display: inline;
+	padding: 0 5px;
+}
+
+.action {
+	font-size: 0.8em; 
+	padding-left: 5px;
+	text-transform: none;
+}
+
+.message {
+    background: #f3f8fc url(../images/information.png) 8px 50% no-repeat;
+    border: 1px solid #b2d1ff;
+    color: #006dba;
+    margin: 10px 0 5px 0;
+    padding: 5px 5px 5px 30px
+}
+
+.error {
+    background: url(../images/exclamation.png) 8px 50% no-repeat;
+    color: #cc0000;
+    margin: 10px 0 5px 0;
+    padding: 5px 10px 5px 30px;
+    width: 100%;
+}
+
+.prop .name {
+	white-space: nowrap;
+	padding: 2px 5px;
+	font-weight: bold;
+}
+
+.prop .name:FIRST-LETTER {
+	text-transform: uppercase;
+}
+
+.prop .value {
+}
+
+.prop .error {
+	white-space: nowrap;
+}
+
+.buttons {
+	margin-top: 5px;
+}
+
+.movable {
+	cursor: move;
+}

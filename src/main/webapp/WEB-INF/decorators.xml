@@ -1,0 +1,11 @@
+<decorators defaultdir="/WEB-INF/decorators">
+	<decorator name="main" page="layout.jsp">
+		<pattern>/</pattern>
+	</decorator>
+	<decorator name="secure" page="secure/layout.jsp">
+		<pattern>/secure/*</pattern>
+	</decorator>
+	<excludes>
+        <pattern>**/ajax</pattern>
+    </excludes>
+</decorators>

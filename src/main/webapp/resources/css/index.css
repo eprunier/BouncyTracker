@@ -1,0 +1,27 @@
+#login-error {
+	text-align: center;
+	padding: 5px;
+}
+
+#login {
+	min-height: 200px;
+	padding-top: 90px;
+}
+
+#login-table {
+	margin: auto;
+}
+
+#remember-me {
+	margin-top: 10px;
+}
+
+#remember-me input[type="checkbox"] {
+	margin-left: 0px;
+}
+
+#signin {
+	float: right;
+	margin-top: 5px;
+	font-size: 1.2em;
+}
