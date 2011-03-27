@@ -33,7 +33,7 @@ import com.bouncytracker.domain.repository.StoryRepository;
 
 @Service
 @Transactional
-public class ProjectManager {
+public class ProjectService {
 
 	@Autowired
 	private ProjectRepository projectRepository;

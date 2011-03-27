@@ -32,14 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bouncytracker.domain.model.Role;
 import com.bouncytracker.domain.model.User;
-import com.bouncytracker.service.UserManager;
+import com.bouncytracker.service.UserService;
 
 @Service("userDetailsService")
 @Transactional
 public class SecurityService implements UserDetailsService {
 
 	@Autowired
-	private UserManager userManager;
+	private UserService userManager;
 	
 	public UserDetails loadUserByUsername(String login)
 	throws UsernameNotFoundException, DataAccessException {

@@ -21,18 +21,53 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
+import com.bouncytracker.domain.model.User;
+import com.bouncytracker.util.ConfigUtil;
+import com.bouncytracker.util.Message;
+import com.bouncytracker.util.PasswordUtil;
 
 public class UserFormData {
 
-	@Email
-	private String email;
+	@NotNull @NotEmpty @Email protected String email;
 	
-	private String password;
-	private String verifyPassword;
+	protected String password;
+	protected String verifyPassword;
 	
-	@NotNull @NotEmpty private String firstName;
-	@NotNull @NotEmpty private String lastName;
+	@NotNull @NotEmpty protected String firstName;
+	@NotNull @NotEmpty protected String lastName;
 
+	public void loadFromUser(User user) {
+		this.email = user.getEmail();
+		this.password = user.getPassword();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+	}
+	
+	public void updateUser(User user, BindingResult result) {
+		user.setEmail(email);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		updatePassword(user, result);
+	}
+	
+	protected void updatePassword(User user, BindingResult result) {
+		if (!"".equals(password.trim())) {
+			if (password.equals(verifyPassword)) {
+				user.setPassword(PasswordUtil.getInstance().digest(password));
+			} else {
+				FieldError error = new FieldError(
+						"user", 
+						"verifyPassword", 
+						ConfigUtil.getMessage(Message.ERROR_PASSWORD_VERIFY.getKey())
+				);
+				result.addError(error);
+			}
+		}
+	}
+	
 	public String getEmail() {
 		return email;
 	}

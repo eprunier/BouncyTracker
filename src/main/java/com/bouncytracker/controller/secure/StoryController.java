@@ -32,14 +32,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.bouncytracker.controller.secure.formdata.StoryFormData;
 import com.bouncytracker.domain.model.Story;
-import com.bouncytracker.service.ProjectManager;
+import com.bouncytracker.service.ProjectService;
 import com.bouncytracker.util.ConfigUtil;
 import com.bouncytracker.util.view.RequestTarget;
 
 @Controller
 public class StoryController {
 
-	@Autowired private ProjectManager projectManager;
+	@Autowired private ProjectService projectManager;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

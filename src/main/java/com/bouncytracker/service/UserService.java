@@ -17,18 +17,24 @@
 
 package com.bouncytracker.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bouncytracker.domain.model.Role;
+import com.bouncytracker.domain.model.RoleType;
 import com.bouncytracker.domain.model.User;
 import com.bouncytracker.domain.repository.UserRepository;
+import com.bouncytracker.util.PasswordUtil;
 
 @Service
 @Transactional
-public class UserManager {
+public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -36,10 +42,26 @@ public class UserManager {
 	public void createUser(User newUser) {
 		User user = userRepository.getUser("eric");
 		if (user != null) {
-			throw new RuntimeException("User already '" + user.getEmail() + "' exists");
+			throw new RuntimeException("User '" + user.getEmail() + "' already exists");
 		} else {
+			digesterPassword(newUser);
+			addUserRole(newUser);
 			userRepository.saveUser(newUser);
 		}
+	}
+	
+	private void digesterPassword(User user) {
+		String plainTextPassword = user.getPassword();
+		String digestedPassword = PasswordUtil.getInstance().digest(plainTextPassword); 
+		user.setPassword(digestedPassword);
+	}
+
+	private void addUserRole(User user) {
+		Set<Role> roles = new HashSet<Role>();
+		Role userRole = new Role();
+		userRole.setRole(RoleType.ROLE_USER.name());
+		roles.add(userRole);
+		user.setRoles(roles);
 	}
 
 	@Transactional(readOnly = true)

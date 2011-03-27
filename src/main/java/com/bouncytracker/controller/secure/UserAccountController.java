@@ -23,30 +23,25 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.bouncytracker.controller.secure.formdata.UserFormData;
 import com.bouncytracker.domain.model.User;
-import com.bouncytracker.service.UserManager;
-import com.bouncytracker.util.ConfigUtil;
-import com.bouncytracker.util.Message;
+import com.bouncytracker.service.UserService;
 import com.bouncytracker.util.view.RequestTarget;
 
 @Controller
 public class UserAccountController {
 
-	@Autowired private UserManager userManager;
+	@Autowired private UserService userManager;
 
 	@ModelAttribute("user")
 	public UserFormData initForm(HttpServletRequest request) {
 		User user = userManager.getCurrentUser();
 		UserFormData data = new UserFormData();
-		data.setEmail(user.getEmail());
-		data.setFirstName(user.getFirstName());
-		data.setLastName(user.getLastName());
+		data.loadFromUser(user);
 		return data;
 	}
 
@@ -69,26 +64,10 @@ public class UserAccountController {
 			value=RequestTarget.USER_ACCOUNT_UPDATE, 
 			method=RequestMethod.POST
 	)
-	public String submitForm(@ModelAttribute("user") @Valid UserFormData data, BindingResult result) {
+	public String update(@ModelAttribute("user") @Valid UserFormData data, BindingResult result) {
 		User user = userManager.loadUser(data.getEmail());
+		data.updateUser(user, result);
 		
-		user.setEmail(data.getEmail());
-		user.setFirstName(data.getFirstName());
-		user.setLastName(data.getLastName());
-		
-		if (!"".equals(data.getPassword().trim())) {
-			if (data.getPassword().equals(data.getVerifyPassword())) {
-				user.setPassword(data.getPassword());
-			} else {
-				FieldError error = new FieldError(
-						"user", 
-						"verifyPassword", 
-						ConfigUtil.getMessage(Message.ERROR_PASSWORD_VERIFY.getKey())
-				);
-				result.addError(error);
-			}
-		}
-
 		if (result.hasErrors()) {
 			return RequestTarget.USER_ACCOUNT_UPDATE;
 		}

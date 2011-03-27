@@ -15,24 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.controller;
+package com.bouncytracker.domain.model;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+public enum RoleType {
 
-import com.bouncytracker.util.view.RequestTarget;
-
-@Controller
-public class IndexController {
-
-	@RequestMapping(
-			value={RequestTarget.SLASH, RequestTarget.INDEX}, 
-			method=RequestMethod.GET
-	)
-	public String index() {
-		return "index";
-	}
-
+	ROLE_USER;
+	
 }
-

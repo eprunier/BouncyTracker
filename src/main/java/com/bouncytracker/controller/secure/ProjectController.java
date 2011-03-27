@@ -41,18 +41,18 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bouncytracker.controller.secure.formdata.ProjectFormData;
 import com.bouncytracker.domain.model.Project;
 import com.bouncytracker.domain.model.User;
-import com.bouncytracker.service.ProjectManager;
-import com.bouncytracker.service.StoryDispatcher;
-import com.bouncytracker.service.UserManager;
+import com.bouncytracker.service.ProjectService;
+import com.bouncytracker.service.UserService;
 import com.bouncytracker.util.ConfigUtil;
+import com.bouncytracker.util.StoryDispatcher;
 import com.bouncytracker.util.view.RequestTarget;
 import com.bouncytracker.util.view.ViewFields;
 
 @Controller
 public class ProjectController {
 
-	@Autowired private UserManager userManager;
-	@Autowired private ProjectManager projectManager;
+	@Autowired private UserService userManager;
+	@Autowired private ProjectService projectManager;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -67,7 +67,7 @@ public class ProjectController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("user", user);
 		model.put("projects", projects);
-		return new ModelAndView("/secure/index", model);
+		return new ModelAndView(RequestTarget.SECURE_INDEX, model);
 	}	
 	
 	@RequestMapping(RequestTarget.PROJECT_SHOW + "/{id}")
@@ -135,7 +135,7 @@ public class ProjectController {
 		
 		Project project = data.asProject();
 		projectManager.updateProject(project);
-		return "redirect:" + RequestTarget.SECURE_INDEX;
+		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + project.getId();
 	}
 
 	@RequestMapping(RequestTarget.PROJECT_DELETE + "/{id}")
