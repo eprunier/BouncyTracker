@@ -42,11 +42,6 @@ public class ProjectService {
 	private StoryRepository storyRepository;
 
 	@Transactional(readOnly = true)
-	public List<Project> listUserProjects(User user) {
-		return projectRepository.listProjectsForUser(user);
-	}
-	
-	@Transactional(readOnly = true)
 	public List<Project> listUserProjectsWithStartedStories(User user) {
 		return projectRepository.listProjectsWithStartedStoriesForUser(user);
 	}

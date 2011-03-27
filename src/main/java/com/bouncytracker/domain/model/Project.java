@@ -35,8 +35,20 @@ import org.hibernate.annotations.NamedQuery;
 
 @Entity
 @NamedQueries({
-	@NamedQuery(name="Project.getProjectsByUser", query="from Project project where project.user = :user"),
-	@NamedQuery(name="Project.findByName", query="from Project project where project.name = :name")
+	@NamedQuery(
+			name="Project.listUserProjects", 
+			query="select distinct p from Project as p" +
+				" left outer join fetch p.stories as s" +
+				" where p.user = :user" +
+				" order by p.name"),
+	@NamedQuery(
+			name="Project.findByName", 
+			query="from Project project where project.name = :name"),
+	@NamedQuery(
+			name="Project.loadProjectWithStories",
+			query="select distinct p from Project as p" +
+				" left join fetch p.stories" +
+				" where p.id = :id")
 })
 @Table(name="tracker_project")
 public class Project {

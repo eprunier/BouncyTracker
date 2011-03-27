@@ -47,28 +47,14 @@ public class ProjectRepository {
 		sessionFactory.getCurrentSession().save(project);		
 	}
 	
-	public List<Project> listProjectsForUser(User user) {
-		Query query = sessionFactory.getCurrentSession().getNamedQuery("Project.getProjectsByUser");
-		query.setParameter("user", user);
-		return query.list();
-	}
-
 	public List<Project> listProjectsWithStartedStoriesForUser(User user) {
-		Query query = sessionFactory.getCurrentSession().createQuery(
-				"select distinct p from Project as p" +
-				" left outer join fetch p.stories as s" +
-				" where p.user = :user"
-		);
+		Query query = sessionFactory.getCurrentSession().getNamedQuery("Project.listUserProjects");
 		query.setParameter("user", user);
 		return query.list();
 	}
 
 	public Project loadProjectWithStories(String id) {
-		Query query = sessionFactory.getCurrentSession().createQuery(
-				"select distinct p from Project as p" +
-				" left join fetch p.stories" +
-				" where p.id = :id"
-		);
+		Query query = sessionFactory.getCurrentSession().getNamedQuery("Project.loadProjectWithStories");
 		query.setParameter("id", id);
 		return (Project)query.uniqueResult();
 	}
