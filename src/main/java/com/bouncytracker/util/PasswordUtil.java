@@ -20,16 +20,18 @@ package com.bouncytracker.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.springframework.security.core.codec.Hex;
+
 public class PasswordUtil {
 
 	private static PasswordUtil passwordDigester = new PasswordUtil();
-	
-	private final MessageDigest digester;;
-	
+
+	private final MessageDigest digester;
+
 	public static PasswordUtil getInstance() {
 		return passwordDigester;
 	}
-	
+
 	private PasswordUtil() {
 		try {
 			digester = MessageDigest.getInstance("SHA");
@@ -37,20 +39,13 @@ public class PasswordUtil {
 			throw new RuntimeException(
 					ConfigUtil.getMessage(Message.ERROR_INTERNAL.getKey()),
 					ex
-				);
+			);
 		}
 	}
-	
+
 	public String digest(String password) {
 		digester.update(password.getBytes());
-        byte[] result = digester.digest();
-        
-        StringBuffer buffer = new StringBuffer();
-        for (byte b : result) {
-        	buffer.append(String.format("%x", b));
-        }
-        
-        return buffer.toString();
+		byte[] result = digester.digest();
+		return new String(Hex.encode(result));
 	}
-	
 }

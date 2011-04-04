@@ -53,7 +53,7 @@ public class UserFormData {
 		updatePassword(user, result);
 	}
 	
-	protected void updatePassword(User user, BindingResult result) {
+	private void updatePassword(User user, BindingResult result) {
 		if (!"".equals(password.trim())) {
 			if (password.equals(verifyPassword)) {
 				user.setPassword(PasswordUtil.getInstance().digest(password));

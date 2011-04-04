@@ -71,7 +71,7 @@ public class UserController {
 		}
 
 		userManager.createUser(user);
-		return "redirect:" + RequestTarget.SECURE_INDEX;
+		return "redirect:" + RequestTarget.INDEX;
 	}
 
 	@RequestMapping(value={RequestTarget.LOGIN})

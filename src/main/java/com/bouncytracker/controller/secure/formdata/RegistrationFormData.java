@@ -38,7 +38,7 @@ public class RegistrationFormData extends UserFormData {
 		user.setEmail(email);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
-		updatePassword(user, result);
+		user.setPassword(password);
 		return user;
 	}
 	
