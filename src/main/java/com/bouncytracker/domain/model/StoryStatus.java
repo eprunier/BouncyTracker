@@ -22,9 +22,9 @@ import java.util.Map;
 
 public enum StoryStatus {
 
-	CREATED(0),
-	STARTED(1),
-	COMPLETED(2);
+	CREATED(10),
+	STARTED(20),
+	COMPLETED(30);
 
 	private static Map<Integer, StoryStatus> statusMap = new HashMap<Integer, StoryStatus>();
 	
@@ -47,4 +47,5 @@ public enum StoryStatus {
 	public static Map<Integer, StoryStatus> getStatusMap() {
 		return statusMap;
 	}
+
 }

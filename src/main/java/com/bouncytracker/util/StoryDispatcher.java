@@ -18,8 +18,6 @@
 package com.bouncytracker.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.bouncytracker.domain.model.Story;
@@ -46,25 +44,12 @@ public class StoryDispatcher {
 				break;
 			}
 		}
-		
-		sortTodoByPriority();
 	}
 	
 	private StoryStatus getStoryStatus(Story story) {
 		return StoryStatus.getStatusMap().get(story.getStatus());
 	}
 
-	private void sortTodoByPriority() {
-		Collections.sort(todo, new Comparator<Story>() {
-			@Override 
-			public int compare(Story story1, Story story2) {
-				Integer story1Priority = story1.getPriority();
-				Integer story2Priority = story2.getPriority();
-				return story1Priority.compareTo(story2Priority);
-			}
-		});
-	}
-	
 	public List<Story> getTodo() {
 		return todo;
 	}

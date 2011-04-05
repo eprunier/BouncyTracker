@@ -47,8 +47,9 @@ import org.hibernate.annotations.NamedQuery;
 	@NamedQuery(
 			name="Project.loadProjectWithStories",
 			query="select distinct p from Project as p" +
-				" left join fetch p.stories" +
-				" where p.id = :id")
+				" left join fetch p.stories as s " +
+				" where p.id = :id" +
+				" order by s.priority")
 })
 @Table(name="tracker_project")
 public class Project {
