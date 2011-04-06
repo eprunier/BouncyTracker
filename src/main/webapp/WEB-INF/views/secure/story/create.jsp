@@ -19,6 +19,7 @@
 	<c:url value="/secure/story/create" var="saveAction" />
 	<form:form commandName="story" action="${saveAction}">
 		<form:hidden path="project.id" />
+		<form:hidden path="status" />
 		<table>
 			<tbody>
 				<tr class="even prop">
