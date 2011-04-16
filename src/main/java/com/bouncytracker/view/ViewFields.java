@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.util.view;
+package com.bouncytracker.view;
 
 public enum ViewFields {
 

@@ -17,35 +17,29 @@
 
 package com.bouncytracker.util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
 
-import org.springframework.security.core.codec.Hex;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
 
-public class PasswordUtil {
+public final class ConfigHelper {
 
-	private static PasswordUtil passwordDigester = new PasswordUtil();
-
-	private final MessageDigest digester;
-
-	public static PasswordUtil getInstance() {
-		return passwordDigester;
+	private static final String BUNDLE_NAME = "messages";
+	
+	private ConfigHelper() {
 	}
-
-	private PasswordUtil() {
-		try {
-			digester = MessageDigest.getInstance("SHA");
-		} catch (NoSuchAlgorithmException ex) {
-			throw new RuntimeException(
-					ConfigUtil.getMessage(Message.ERROR_INTERNAL.getKey()),
-					ex
-			);
-		}
+	
+	public static void configDateBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(
+				Date.class, 
+				new CustomDateEditor(DateFormat.getDateInstance(DateFormat.SHORT), true)
+		);
 	}
-
-	public String digest(String password) {
-		digester.update(password.getBytes());
-		byte[] result = digester.digest();
-		return new String(Hex.encode(result));
+	
+	public static String getMessage(String key) {
+		return ResourceBundle.getBundle(BUNDLE_NAME).getString(key);
 	}
+	
 }

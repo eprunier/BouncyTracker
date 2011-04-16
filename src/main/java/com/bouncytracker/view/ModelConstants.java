@@ -15,24 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.controller;
+package com.bouncytracker.view;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+public interface ModelConstants {
 
-import com.bouncytracker.view.RequestTarget;
-
-@Controller
-public final class IndexController {
-
-	@RequestMapping(
-			value={RequestTarget.SLASH, RequestTarget.INDEX}, 
-			method=RequestMethod.GET
-	)
-	public String index() {
-		return "index";
-	}
-
+	String USER = "user";
+	
+	String PROJECT = "project";
+	
+	String STORY = "story";
+	String TODO = "todo";
+	
 }
-

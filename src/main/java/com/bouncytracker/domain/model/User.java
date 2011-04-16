@@ -34,7 +34,7 @@ import org.hibernate.annotations.NamedQuery;
     @NamedQuery(name = "User.getNumberOfUsers", query = "SELECT COUNT(user) FROM User user")
 })
 @Table(name="tracker_user")
-public class User {
+public final class User {
 
 	private static final long serialVersionUID = 1L;
 	

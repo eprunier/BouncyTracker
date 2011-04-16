@@ -55,8 +55,7 @@ public class ProjectService {
 
 	@Transactional(readOnly = true)
 	public Project loadProjectWithStories(String id) {
-		Project project = projectRepository.loadProjectWithStories(id);
-		return project;
+		return projectRepository.loadProjectWithStories(id);
 	}
 
 	@Transactional(readOnly = true)

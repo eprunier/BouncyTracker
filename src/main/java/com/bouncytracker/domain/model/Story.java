@@ -36,7 +36,7 @@ import org.hibernate.annotations.NamedQuery;
 	@NamedQuery(name="Story.loadStoryWithProject", query="from Story as s left join fetch s.project where s.id = :id")
 })
 @Table(name="tracker_story")
-public class Story {
+public final class Story {
 
 	@Id
 	@GeneratedValue(generator="system-uuid")

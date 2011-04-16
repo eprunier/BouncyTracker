@@ -23,7 +23,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="tracker_role")
-public class Role {
+public final class Role {
 
 	@Id
 	private String role;

@@ -38,48 +38,50 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bouncytracker.controller.secure.formdata.ProjectFormData;
+import com.bouncytracker.controller.AbstractController;
+import com.bouncytracker.controller.secure.form.ProjectForm;
 import com.bouncytracker.domain.model.Project;
 import com.bouncytracker.domain.model.User;
 import com.bouncytracker.service.ProjectService;
+import com.bouncytracker.service.StoryDispatcher;
 import com.bouncytracker.service.UserService;
-import com.bouncytracker.util.ConfigUtil;
-import com.bouncytracker.util.StoryDispatcher;
-import com.bouncytracker.util.view.RequestTarget;
-import com.bouncytracker.util.view.ViewFields;
+import com.bouncytracker.util.ConfigHelper;
+import com.bouncytracker.view.ModelConstants;
+import com.bouncytracker.view.RequestTarget;
+import com.bouncytracker.view.ViewFields;
 
 @Controller
-public class ProjectController {
+public final class ProjectController extends AbstractController {
 
-	@Autowired private UserService userManager;
-	@Autowired private ProjectService projectManager;
+	@Autowired private UserService userService;
+	@Autowired private ProjectService projectService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		ConfigUtil.configDateBinder(binder);
+		ConfigHelper.configDateBinder(binder);
 	}
 	
 	@RequestMapping(value={RequestTarget.SECURE_SLASH, RequestTarget.SECURE_INDEX})
 	public ModelAndView secure() {
-		User user = userManager.getCurrentUser();
-		List<Project> projects = projectManager.listUserProjectsWithStartedStories(user);
+		User user = userService.getCurrentUser();
+		List<Project> projects = projectService.listUserProjectsWithStartedStories(user);
 	
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("user", user);
+		model.put(ModelConstants.USER, user);
 		model.put("projects", projects);
 		return new ModelAndView(RequestTarget.SECURE_INDEX, model);
 	}	
 	
 	@RequestMapping(RequestTarget.PROJECT_SHOW + "/{id}")
 	public ModelAndView show(@PathVariable String id) {
-		Project project = projectManager.loadProjectWithStories(id);
+		Project project = projectService.loadProjectWithStories(id);
 		
 		StoryDispatcher storyDispatcher = new StoryDispatcher();
 		storyDispatcher.dispatch(project.getStories());
 		
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("project", project);
-		model.put("todo", storyDispatcher.getTodo());
+		model.put(ModelConstants.PROJECT, project);
+		model.put(ModelConstants.TODO, storyDispatcher.getTodo());
 		model.put("currentStories", storyDispatcher.getCurrentStories());
 		model.put("completedStories", storyDispatcher.getCompletedStories());
 		return new ModelAndView(RequestTarget.PROJECT_SHOW, model);
@@ -91,26 +93,26 @@ public class ProjectController {
 	)
 	public void create(ModelMap model) {
 		Project project = new Project();
-		project.setUser(userManager.getCurrentUser());
+		project.setUser(userService.getCurrentUser());
 		
-		ProjectFormData formData = new ProjectFormData();
-		formData.loadFromProject(project);
+		ProjectForm form = new ProjectForm();
+		form.loadFromProject(project);
 		
-		model.addAttribute("project", formData);
+		model.addAttribute(ModelConstants.PROJECT, form);
 	}
 	
 	@RequestMapping(
 			value=RequestTarget.PROJECT_CREATE,
 			method=RequestMethod.POST
 	)
-	public String create(@ModelAttribute("project") @Valid ProjectFormData data, BindingResult result) {
+	public String create(@ModelAttribute("project") @Valid ProjectForm data, BindingResult result) {
 		if (result.hasErrors()) {
 			return RequestTarget.PROJECT_CREATE;
 		}
 		
 		Project project = data.asProject();
-		projectManager.createProject(project);
-		return "redirect:" + RequestTarget.SECURE_INDEX;
+		projectService.createProject(project);
+		return redirect(RequestTarget.SECURE_INDEX);
 	}
 	
 	@RequestMapping(
@@ -118,9 +120,9 @@ public class ProjectController {
 			method=RequestMethod.GET
 	)
 	public String update(@PathVariable String id, ModelMap model) {
-		ProjectFormData data = new ProjectFormData();
-		data.loadFromProject(projectManager.loadProject(id));
-		model.addAttribute("project", data);
+		ProjectForm form = new ProjectForm();
+		form.loadFromProject(projectService.loadProject(id));
+		model.addAttribute(ModelConstants.PROJECT, form);
 		return RequestTarget.PROJECT_UPDATE;
 	}
 
@@ -128,27 +130,28 @@ public class ProjectController {
 			value=RequestTarget.PROJECT_UPDATE,
 			method=RequestMethod.POST
 	)
-	public String update(@ModelAttribute("project") @Valid ProjectFormData data, BindingResult result) {
+	public String update(@ModelAttribute("project") @Valid ProjectForm data, BindingResult result) {
 		if (result.hasErrors()) {
 			return RequestTarget.PROJECT_UPDATE;
 		}
 		
 		Project project = data.asProject();
-		projectManager.updateProject(project);
-		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + project.getId();
+		projectService.updateProject(project);
+		return redirect(RequestTarget.PROJECT_SHOW + "/" + project.getId());
 	}
 
 	@RequestMapping(RequestTarget.PROJECT_DELETE + "/{id}")
 	public String delete(@PathVariable String id) {
-		projectManager.deleteProject(id);
-		return "redirect:" + RequestTarget.SECURE_INDEX;
+		projectService.deleteProject(id);
+		return redirect(RequestTarget.SECURE_INDEX);
 	}
 	
 	@RequestMapping(
 			value=RequestTarget.PROJECT_AJAX_SORT,
 			method=RequestMethod.POST
 	)
-	public @ResponseBody void sortTodo(@RequestBody String requestBody) {
+	@ResponseBody 
+	public void sortTodo(@RequestBody String requestBody) {
 		String projectId = "";
 		List<String> storyIds = new ArrayList<String>();
 		
@@ -165,7 +168,7 @@ public class ProjectController {
 			}
 		}
 		
-		projectManager.saveTodoOrder(projectId, storyIds);
+		projectService.saveTodoOrder(projectId, storyIds);
 	}
 	
 	private String[] getRequestParams(String request) {

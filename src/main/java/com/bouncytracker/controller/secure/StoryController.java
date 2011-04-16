@@ -30,31 +30,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bouncytracker.controller.secure.formdata.StoryFormData;
+import com.bouncytracker.controller.AbstractController;
+import com.bouncytracker.controller.secure.form.StoryForm;
 import com.bouncytracker.domain.model.Story;
 import com.bouncytracker.service.ProjectService;
-import com.bouncytracker.util.ConfigUtil;
-import com.bouncytracker.util.view.RequestTarget;
+import com.bouncytracker.util.ConfigHelper;
+import com.bouncytracker.view.ModelConstants;
+import com.bouncytracker.view.RequestConstants;
+import com.bouncytracker.view.RequestTarget;
 
 @Controller
-public class StoryController {
+public final class StoryController extends AbstractController {
 
-	@Autowired private ProjectService projectManager;
+	@Autowired private ProjectService projectService;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		ConfigUtil.configDateBinder(binder);
+		ConfigHelper.configDateBinder(binder);
 	}
 	
-	@RequestMapping(RequestTarget.STORY_CREATE + "/{projectId}")
+	@RequestMapping(RequestTarget.STORY_CREATE + "/" + RequestConstants.PROJECT_ID)
 	public String create(@PathVariable String projectId, ModelMap model) {
 		Story story = new Story();
-		story.setProject(projectManager.loadProject(projectId));
+		story.setProject(projectService.loadProject(projectId));
 
-		StoryFormData formData = new StoryFormData();
-		formData.loadFromStory(story);
+		StoryForm form = new StoryForm();
+		form.loadFromStory(story);
 		
-		model.addAttribute("story", formData);
+		model.addAttribute(ModelConstants.STORY, form);
 		return RequestTarget.STORY_CREATE;
 	}
 	
@@ -62,38 +65,38 @@ public class StoryController {
 			value=RequestTarget.STORY_CREATE,
 			method={RequestMethod.POST}
 	)
-	public String create(@ModelAttribute("story") @Valid StoryFormData formData, BindingResult result) {
+	public String create(@ModelAttribute(ModelConstants.STORY) @Valid StoryForm form, BindingResult result) {
 		if (result.hasErrors()) {
 			return RequestTarget.STORY_CREATE;
 		}
 		
-		Story story = formData.asStory();
-		projectManager.createStory(story);
+		Story story = form.asStory();
+		projectService.createStory(story);
 		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId();
 	}
 	
-	@RequestMapping(RequestTarget.STORY_COMPLETE + "/{id}")
+	@RequestMapping(RequestTarget.STORY_COMPLETE + "/" + RequestConstants.ID)
 	public String complete(@PathVariable String id) {
-		Story story = projectManager.loadStoryWithProject(id);
-		projectManager.completeStory(story);
-		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId();
+		Story story = projectService.loadStoryWithProject(id);
+		projectService.completeStory(story);
+		return redirect(RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId());
 
 	}
 	
-	@RequestMapping(RequestTarget.STORY_START + "/{id}")
+	@RequestMapping(RequestTarget.STORY_START + "/" + RequestConstants.ID)
 	public String start(@PathVariable String id) {
-		Story story = projectManager.loadStoryWithProject(id);
-		projectManager.startStory(story);
-		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId();
+		Story story = projectService.loadStoryWithProject(id);
+		projectService.startStory(story);
+		return redirect(RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId());
 	}
 	
 	@RequestMapping(
-			value=RequestTarget.STORY_UPDATE + "/{id}",
+			value=RequestTarget.STORY_UPDATE + "/" + RequestConstants.ID,
 			method=RequestMethod.GET
 	)
 	public String update(@PathVariable String id, ModelMap model) {
-		StoryFormData data = new StoryFormData();
-		data.loadFromStory(projectManager.loadStoryWithProject(id));
+		StoryForm data = new StoryForm();
+		data.loadFromStory(projectService.loadStoryWithProject(id));
 		model.addAttribute("story", data);
 		return RequestTarget.STORY_UPDATE;
 	}
@@ -102,21 +105,21 @@ public class StoryController {
 			value=RequestTarget.STORY_UPDATE,
 			method={RequestMethod.POST}
 	)
-	public String update(@ModelAttribute("story") @Valid StoryFormData data, BindingResult result) {
+	public String update(@ModelAttribute(ModelConstants.STORY) @Valid StoryForm data, BindingResult result) {
 		if (result.hasErrors()) {
 			return RequestTarget.STORY_UPDATE;
 		}
 
 		Story story = data.asStory();
-		projectManager.updateStory(story);
+		projectService.updateStory(story);
 		
-		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId();
+		return redirect (RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId());
 	}
 	
-	@RequestMapping(RequestTarget.STORY_DELETE + "/{id}")
+	@RequestMapping(RequestTarget.STORY_DELETE + "/" + RequestConstants.ID)
 	public String delete(@PathVariable String id) {
-		Story story = projectManager.loadStoryWithProject(id);
-		projectManager.deleteStory(story);
-		return "redirect:" + RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId();
+		Story story = projectService.loadStoryWithProject(id);
+		projectService.deleteStory(story);
+		return redirect(RequestTarget.PROJECT_SHOW + "/" + story.getProject().getId());
 	}
 }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.controller.secure.formdata;
+package com.bouncytracker.controller.secure.form;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,25 +25,34 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import com.bouncytracker.domain.model.User;
-import com.bouncytracker.util.ConfigUtil;
+import com.bouncytracker.util.ConfigHelper;
 import com.bouncytracker.util.Message;
-import com.bouncytracker.util.PasswordUtil;
+import com.bouncytracker.util.PasswordHelper;
 
-public class UserFormData {
+public final class UserForm {
 
-	@NotNull @NotEmpty @Email protected String email;
+	@NotNull @NotEmpty @Email private String email;
 	
-	protected String password;
-	protected String verifyPassword;
+	private String password;
+	private String verifyPassword;
 	
-	@NotNull @NotEmpty protected String firstName;
-	@NotNull @NotEmpty protected String lastName;
+	@NotNull @NotEmpty private String firstName;
+	@NotNull @NotEmpty private String lastName;
 
 	public void loadFromUser(User user) {
 		this.email = user.getEmail();
 		this.password = user.getPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
+	}
+	
+	public User asUser(BindingResult result) {
+		User user = new User();
+		user.setEmail(this.getEmail());
+		user.setFirstName(this.getFirstName());
+		user.setLastName(this.getLastName());
+		user.setPassword(this.getPassword());
+		return user;
 	}
 	
 	public void updateUser(User user, BindingResult result) {
@@ -56,18 +65,18 @@ public class UserFormData {
 	private void updatePassword(User user, BindingResult result) {
 		if (!"".equals(password.trim())) {
 			if (password.equals(verifyPassword)) {
-				user.setPassword(PasswordUtil.getInstance().digest(password));
+				user.setPassword(PasswordHelper.getInstance().digest(password));
 			} else {
 				FieldError error = new FieldError(
 						"user", 
 						"verifyPassword", 
-						ConfigUtil.getMessage(Message.ERROR_PASSWORD_VERIFY.getKey())
+						ConfigHelper.getMessage(Message.ERROR_PASSWORD_VERIFY.getKey())
 				);
 				result.addError(error);
 			}
 		}
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -107,5 +116,4 @@ public class UserFormData {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
 }

@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 import com.bouncytracker.domain.model.User;
 
 @Repository
-public class UserRepository {
+public final class UserRepository {
 	
 	@Autowired private SessionFactory sessionFactory;
 

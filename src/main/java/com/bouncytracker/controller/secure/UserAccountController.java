@@ -27,20 +27,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bouncytracker.controller.secure.formdata.UserFormData;
+import com.bouncytracker.controller.secure.form.UserForm;
 import com.bouncytracker.domain.model.User;
 import com.bouncytracker.service.UserService;
-import com.bouncytracker.util.view.RequestTarget;
+import com.bouncytracker.view.RequestTarget;
 
 @Controller
-public class UserAccountController {
+public final class UserAccountController {
 
-	@Autowired private UserService userManager;
+	@Autowired private UserService userService;
 
 	@ModelAttribute("user")
-	public UserFormData initForm(HttpServletRequest request) {
-		User user = userManager.getCurrentUser();
-		UserFormData data = new UserFormData();
+	public UserForm initForm(HttpServletRequest request) {
+		User user = userService.getCurrentUser();
+		UserForm data = new UserForm();
 		data.loadFromUser(user);
 		return data;
 	}
@@ -64,15 +64,15 @@ public class UserAccountController {
 			value=RequestTarget.USER_ACCOUNT_UPDATE, 
 			method=RequestMethod.POST
 	)
-	public String update(@ModelAttribute("user") @Valid UserFormData data, BindingResult result) {
-		User user = userManager.loadUser(data.getEmail());
+	public String update(@ModelAttribute("user") @Valid UserForm data, BindingResult result) {
+		User user = userService.loadUser(data.getEmail());
 		data.updateUser(user, result);
 		
 		if (result.hasErrors()) {
 			return RequestTarget.USER_ACCOUNT_UPDATE;
 		}
 		
-		userManager.updateUser(user);
+		userService.updateUser(user);
 		return RequestTarget.USER_ACCOUNT_INDEX;
 	}
 }

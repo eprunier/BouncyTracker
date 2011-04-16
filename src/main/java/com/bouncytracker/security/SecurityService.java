@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,14 +35,13 @@ import com.bouncytracker.service.UserService;
 
 @Service("userDetailsService")
 @Transactional
-public class SecurityService implements UserDetailsService {
+public final class SecurityService implements UserDetailsService {
 
 	@Autowired
-	private UserService userManager;
+	private UserService userService;
 	
-	public UserDetails loadUserByUsername(String login)
-	throws UsernameNotFoundException, DataAccessException {
-		User user = userManager.loadUser(login);
+	public UserDetails loadUserByUsername(String login) {
+		User user = userService.loadUser(login);
 		if (user == null) {
 			throw new UsernameNotFoundException("Unknown user '" + login + "'");
 		}

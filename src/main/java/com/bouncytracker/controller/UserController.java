@@ -24,63 +24,79 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bouncytracker.controller.secure.formdata.RegistrationFormData;
+import com.bouncytracker.controller.secure.form.UserForm;
 import com.bouncytracker.domain.model.User;
 import com.bouncytracker.service.UserService;
-import com.bouncytracker.util.ConfigUtil;
-import com.bouncytracker.util.view.RequestTarget;
+import com.bouncytracker.util.ConfigHelper;
+import com.bouncytracker.util.Message;
+import com.bouncytracker.util.TypesHelper;
+import com.bouncytracker.view.RequestTarget;
 
 @Controller
-public class UserController {
-	
-	@Autowired private UserService userManager;
-	
+public final class UserController {
+
+	@Autowired private UserService userService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		ConfigUtil.configDateBinder(binder);
+		ConfigHelper.configDateBinder(binder);
 	}
-	
+
 	@RequestMapping(
 			value=RequestTarget.REGISTER,
 			method=RequestMethod.GET
 	)
 	public void register(ModelMap model) {
 		User user = new User();
-		
-		RegistrationFormData data = new RegistrationFormData();
-		data.loadFromUser(user);
-		
-		model.addAttribute("user", data);
+
+		UserForm form = new UserForm();
+		form.loadFromUser(user);
+
+		model.addAttribute("user", form);
 	}
 
 	@RequestMapping(
 			value=RequestTarget.REGISTER,
 			method=RequestMethod.POST
 	)
-	public String register(@ModelAttribute("user") @Valid RegistrationFormData data, BindingResult result) {
-		User user = data.asUser(result);
-		
+	public String register(@ModelAttribute("user") @Valid UserForm form, BindingResult result) {
+		checkPassword(form, result);
+
 		if (result.hasErrors()) {
 			return RequestTarget.REGISTER;
 		}
 
-		userManager.createUser(user);
+		User user = form.asUser(result);
+		userService.createUser(user);
 		return "redirect:" + RequestTarget.INDEX;
+	}
+	
+	private void checkPassword(UserForm form, BindingResult result) {
+		if (TypesHelper.isBlank(form.getPassword()) || TypesHelper.isBlank(form.getVerifyPassword())) {
+			result.addError(
+					new FieldError(
+							"user", 
+							"password", 
+							ConfigHelper.getMessage(Message.ERROR_EMPTY_PASSWORD.getKey())
+					)
+			);
+		}
 	}
 
 	@RequestMapping(value={RequestTarget.LOGIN})
 	public String login(HttpServletRequest request) {
 		return "redirect:" + RequestTarget.SECURE_INDEX;
 	}
-	
+
 	@RequestMapping(RequestTarget.LOGIN_FAILURE)
 	public void loginFailure() {
 	}
-	
+
 }

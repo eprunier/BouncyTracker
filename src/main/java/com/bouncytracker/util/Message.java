@@ -19,7 +19,8 @@ package com.bouncytracker.util;
 
 public enum Message {
 
-	ERROR_PASSWORD_VERIFY("user.verifyPassword.error"),
+	ERROR_EMPTY_PASSWORD("user.error.password.empty"),
+	ERROR_PASSWORD_VERIFY("user.error.verifyPassword"),
 	ERROR_INTERNAL("error.internal");
 	
 	private final String key;

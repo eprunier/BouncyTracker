@@ -15,24 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.controller;
+package com.bouncytracker;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+public class BouncyTrackerException extends RuntimeException {
 
-import com.bouncytracker.view.RequestTarget;
+	private static final long serialVersionUID = 1L;
 
-@Controller
-public final class IndexController {
+	public BouncyTrackerException() {
+	}
 
-	@RequestMapping(
-			value={RequestTarget.SLASH, RequestTarget.INDEX}, 
-			method=RequestMethod.GET
-	)
-	public String index() {
-		return "index";
+	public BouncyTrackerException(String message) {
+		super(message);
+	}
+
+	public BouncyTrackerException(Throwable cause) {
+		super(cause);
+	}
+	
+	public BouncyTrackerException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }
-

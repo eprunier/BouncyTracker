@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.controller.secure.formdata;
+package com.bouncytracker.controller.secure.form;
 
 import java.util.Date;
 
@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.bouncytracker.domain.model.Project;
 import com.bouncytracker.domain.model.Story;
 
-public class StoryFormData {
+public final class StoryForm {
 
 	@NotNull @NotEmpty private String label;
 	@NotNull @NotEmpty private String description;

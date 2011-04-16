@@ -26,11 +26,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bouncytracker.BouncyTrackerException;
 import com.bouncytracker.domain.model.Role;
 import com.bouncytracker.domain.model.RoleType;
 import com.bouncytracker.domain.model.User;
 import com.bouncytracker.domain.repository.UserRepository;
-import com.bouncytracker.util.PasswordUtil;
+import com.bouncytracker.util.PasswordHelper;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class UserService {
 	public void createUser(User newUser) {
 		User user = userRepository.getUser("eric");
 		if (user != null) {
-			throw new RuntimeException("User '" + user.getEmail() + "' already exists");
+			throw new BouncyTrackerException("User '" + user.getEmail() + "' already exists");
 		} else {
 			digesterPassword(newUser);
 			addUserRole(newUser);
@@ -52,7 +53,7 @@ public class UserService {
 	
 	private void digesterPassword(User user) {
 		String plainTextPassword = user.getPassword();
-		String digestedPassword = PasswordUtil.getInstance().digest(plainTextPassword); 
+		String digestedPassword = PasswordHelper.getInstance().digest(plainTextPassword); 
 		user.setPassword(digestedPassword);
 	}
 

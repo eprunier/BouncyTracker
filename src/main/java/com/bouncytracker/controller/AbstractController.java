@@ -15,28 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.bouncytracker.util;
+package com.bouncytracker.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.ResourceBundle;
+import com.bouncytracker.view.RequestTarget;
 
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
+public abstract class AbstractController {
 
-public class ConfigUtil {
-
-	private static final String BUNDLE_NAME = "messages";
-	
-	public static void configDateBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(
-				Date.class, 
-				new CustomDateEditor(DateFormat.getDateInstance(DateFormat.SHORT), true)
-		);
-	}
-	
-	public static String getMessage(String key) {
-		return ResourceBundle.getBundle(BUNDLE_NAME).getString(key);
+	protected final String redirect(String target) {
+		return RequestTarget.REDIRECT + target;
 	}
 	
 }

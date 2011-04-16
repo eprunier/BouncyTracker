@@ -52,7 +52,7 @@ import org.hibernate.annotations.NamedQuery;
 				" order by s.priority")
 })
 @Table(name="tracker_project")
-public class Project {
+public final class Project {
 
 	@Id
     @GeneratedValue(generator = "system-uuid")
@@ -71,13 +71,20 @@ public class Project {
 	@Cascade(CascadeType.ALL)
 	private List<Story> stories;
 
-	
 	public String getId() {
 		return id;
 	}
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getName() {
@@ -96,22 +103,6 @@ public class Project {
 		this.description = description;
 	}
 
-	public List<Story> getStories() {
-		return stories;
-	}
-
-	public void setStories(List<Story> tasks) {
-		this.stories = tasks;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -124,8 +115,15 @@ public class Project {
 		return iterationLength;
 	}
 
-	public void setIterationLength(int iterationLenght) {
-		this.iterationLength = iterationLenght;
+	public void setIterationLength(int iterationLength) {
+		this.iterationLength = iterationLength;
 	}
-	
+
+	public List<Story> getStories() {
+		return stories;
+	}
+
+	public void setStories(List<Story> stories) {
+		this.stories = stories;
+	}
 }

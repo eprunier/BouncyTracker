@@ -26,11 +26,11 @@ public enum StoryCategory {
 	FEATURE(1),
 	TECHNICAL(2);
 	
-	private static final Map<Integer, StoryCategory> categoryMap = new HashMap<Integer, StoryCategory>();
+	private static final Map<Integer, StoryCategory> CATEGORY_MAP = new HashMap<Integer, StoryCategory>();
 	
 	static {
 		for (StoryCategory category : StoryCategory.values()) {
-			categoryMap.put(category.getCategory(), category);
+			CATEGORY_MAP.put(category.getCategory(), category);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public enum StoryCategory {
 	}
 
 	public static Map<Integer, StoryCategory> getCategoryMap() {
-		return categoryMap;
+		return CATEGORY_MAP;
 	}
 	
 }
