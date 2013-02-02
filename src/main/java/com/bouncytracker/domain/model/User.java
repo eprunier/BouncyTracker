@@ -36,8 +36,6 @@ import org.hibernate.annotations.NamedQuery;
 @Table(name="tracker_user")
 public final class User {
 
-	private static final long serialVersionUID = 1L;
-	
 	@Id
 	private String email;
 	private String password;
